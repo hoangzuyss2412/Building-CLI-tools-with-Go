@@ -1,11 +1,11 @@
 package main
 
 import (
-	"fmt"
-	"math"
-	"strings"
-	"os"
 	"bufio"
+	"fmt"
+	"io"
+	"math"
+	"os"
 )
 
 func rgb(i int) (int, int, int) { 
@@ -27,19 +27,24 @@ func print(output []rune ){
 func main(){ 
 	info, _ := os.Stdin.Stat()
 	
-	if info.Mode() & info.ModeCharDevice != 0 { 
+	if (info.Mode() & os.ModeCharDevice) != 0 { 
 		fmt.Println("The command is intended to work with pipes.")
         fmt.Println("Usage: fortune | gorainbow")
 	}
 
-	reader := bufio.reader(os.Stdin)
+	reader := bufio.NewReader(os.Stdin)
 	var output []rune 
 
 	for { 
-		input, _, err = reader.ReadRune()
+		input, _, err := reader.ReadRune()
 
-		if err != nil && err == io.EOF { 
-			break
+		if err != nil { 
+			if err == io.EOF { 
+				break
+			}
+
+			fmt.Fprintln(os.Stderr, "Error reading input:", err)
+			return
 		}
 
 		output = append(output, input)
