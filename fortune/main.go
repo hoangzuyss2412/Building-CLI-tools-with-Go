@@ -6,7 +6,8 @@ import (
 )
 
 func main() {
-	out, err := exec.Command("fortune", "-f").CombinedOutput()
+	// Run "fortune -f" via WSL because we're on Windows
+	out, err := exec.Command("wsl", "fortune", "-f").CombinedOutput()
 	if err != nil {
 		panic(err)
 	}
