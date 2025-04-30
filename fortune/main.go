@@ -67,12 +67,12 @@ func main() {
 	// Convert Linux path to Windows path if running on Window machine
 	if runtime.GOOS == "windows" {
 		translate := exec.Command("wsl", "wslpath", "-w", root)
-		translatedBytes, err := translate.Output()
-		if err != nil {
-			panic(err)
+		translatedBytes, translateErr := translate.Output()
+		if translateErr != nil {
+			panic(translateErr)
 		}
 		windowsPath := strings.TrimSpace(string(translatedBytes))
-		filepath.Walk(windowsPath, visit)
+		err = filepath.Walk(windowsPath, visit)
 	} else {
 		err = filepath.Walk(root, visit)
 	}
