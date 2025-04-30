@@ -27,6 +27,10 @@ func visit(path string, f os.FileInfo, err error) error {
 		return nil
 	}
 
+	if strings.HasSuffix(path, ".u8") {
+		return nil
+	}
+
 	if f.IsDir() {
 		return nil
 	}
