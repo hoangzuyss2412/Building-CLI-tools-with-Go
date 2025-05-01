@@ -29,7 +29,7 @@ func main() {
 
 	if (info.Mode() & os.ModeCharDevice) != 0 {
 		fmt.Println("The command is intended to work with pipes.")
-		fmt.Println("Usage: fortune | gorainbow")
+		fmt.Println("Usage: fortune | lolcat")
 	}
 
 	reader := bufio.NewReader(os.Stdin)
