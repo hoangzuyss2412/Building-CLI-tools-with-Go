@@ -41,6 +41,34 @@ func normalizeStringLength(lines []string, maxWidth int) []string {
 	return ret
 }
 
+func buildBalloon(lines []string, maxWidth int) string {
+	var ret []string
+
+	top := strings.Repeat("_", maxWidth+2)
+	bottom := strings.Repeat("-", maxWidth+2)
+	count := len(lines)
+
+	ret = append(ret, top)
+	if count == 1 {
+		s := fmt.Sprintf("%s %s %s", "<", lines[0], ">")
+		ret = append(ret, s)
+	} else {
+		s := fmt.Sprintf("%s %s %s", "/", lines[0], "\\")
+		ret = append(ret, s)
+
+		for i := 1; i < count-1; i++ {
+			s = fmt.Sprintf("%s %s %s", "|", lines[i], "|")
+			ret = append(ret, s)
+		}
+
+		s = fmt.Sprintf("%s %s %s", "\\", lines[count-1], "/")
+		ret = append(ret, s)
+	}
+
+	ret = append(ret, bottom)
+	return strings.Join(ret, "\n")
+
+}
 func main() {
 	info, _ := os.Stdin.Stat()
 
@@ -73,5 +101,11 @@ func main() {
 	        ||     ||
 		`
 	lines = tabsToSpaces(lines)
+	maxWidth := calculateMaxWidth(lines)
+	lines = normalizeStringLength(lines, maxWidth)
+	balloon := buildBalloon(lines, maxWidth)
+
+	fmt.Println(balloon)
+	fmt.Println(cow)
 
 }
