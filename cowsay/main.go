@@ -44,24 +44,24 @@ func normalizeStringLength(lines []string, maxWidth int) []string {
 func buildBalloon(lines []string, maxWidth int) string {
 	var ret []string
 
-	top := strings.Repeat("_", maxWidth+2)
+	top := strings.Repeat("-", maxWidth+2)
 	bottom := strings.Repeat("-", maxWidth+2)
 	count := len(lines)
 
 	ret = append(ret, top)
 	if count == 1 {
-		s := fmt.Sprintf("%s %s %s", "<", lines[0], ">")
+		s := fmt.Sprintf("< %-*s >", maxWidth, lines[0])
 		ret = append(ret, s)
 	} else {
-		s := fmt.Sprintf("%s %s %s", "/", lines[0], "\\")
+		s := fmt.Sprintf("/ %-*s \\", maxWidth, lines[0])
 		ret = append(ret, s)
 
 		for i := 1; i < count-1; i++ {
-			s = fmt.Sprintf("%s %s %s", "|", lines[i], "|")
+			s = fmt.Sprintf("| %-*s |", maxWidth, lines[i])
 			ret = append(ret, s)
 		}
 
-		s = fmt.Sprintf("%s %s %s", "\\", lines[count-1], "/")
+		s = fmt.Sprintf("\\ %-*s /", maxWidth, lines[count-1])
 		ret = append(ret, s)
 	}
 
