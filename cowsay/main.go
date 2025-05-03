@@ -31,6 +31,16 @@ func calculateMaxWidth(lines []string) int {
 	return w
 }
 
+func normalizeStringLength(lines []string, maxWidth int) []string {
+	var ret []string
+	for _, line := range lines {
+		line = line + strings.Repeat(" ", maxWidth-utf8.RuneCountInString(line))
+		ret = append(ret, line)
+	}
+
+	return ret
+}
+
 func main() {
 	info, _ := os.Stdin.Stat()
 
