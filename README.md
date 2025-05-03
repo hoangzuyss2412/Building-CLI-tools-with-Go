@@ -6,6 +6,8 @@ Go is widely adopted for building cloud-native applications thanks to its lightw
 
 This repo contains one of my first CLI projects in Go. It includes fun commands like `fortune`, `cowsay`, and `lolcat`, all re-implemented in Go. You can see an example output in the screenshot below 🌈🐄.
 
+![CLI Output Preview](assets/cli_output.png)
+
 > Note: I built and tested this on Windows, but it should work on other OS too - just clone the repo and build it with Go. Results might vary slightly depending on your environment.
 
 Enjoy playing around with it!
