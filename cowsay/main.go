@@ -5,7 +5,18 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strings"
 )
+
+func tabsToSpaces(lines []string) []string {
+	var ret []string
+	for _, line := range lines {
+		line = strings.ReplaceAll(line, "\t", "    ")
+		ret = append(ret, line)
+	}
+
+	return ret
+}
 
 func main() {
 	info, _ := os.Stdin.Stat()
@@ -17,10 +28,10 @@ func main() {
 	}
 
 	reader := bufio.NewReader(os.Stdin)
-	var output []rune
+	var lines []string
 
 	for {
-		input, _, err := reader.ReadRune()
+		line, _, err := reader.ReadLine()
 		if err != nil {
 			if err == io.EOF {
 				break
@@ -29,11 +40,15 @@ func main() {
 			fmt.Fprintln(os.Stderr, "Error reading input:", err)
 			return
 		}
-		output = append(output, input)
+		lines = append(lines, string(line))
 	}
 
-	for j := 0; j < len(output); j++ {
-		fmt.Printf("%c", output[j])
-	}
+	var cow = `         \  ^__^
+          \ (oo)\_______
+	    (__)\       )\/\
+	        ||----w |
+	        ||     ||
+		`
+	lines = tabsToSpaces(lines)
 
 }
