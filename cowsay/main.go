@@ -6,6 +6,7 @@ import (
 	"io"
 	"os"
 	"strings"
+	"unicode/utf8"
 )
 
 func tabsToSpaces(lines []string) []string {
@@ -16,6 +17,18 @@ func tabsToSpaces(lines []string) []string {
 	}
 
 	return ret
+}
+
+func calculateMaxWidth(lines []string) int {
+	w := 0
+	for _, line := range lines {
+		len := utf8.RuneCountInString(line)
+		if len > w {
+			w = len
+		}
+	}
+
+	return w
 }
 
 func main() {
