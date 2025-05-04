@@ -62,7 +62,19 @@ func getDotFilePath() string {
 	return filepath.Join(usr.HomeDir, ".gitlocalstats")
 }
 
+func ensureDotFileExists(path string) {
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		f, err := os.Create(path)
+		if err != nil {
+			log.Fatal("Failed to create dotfile:", err)
+		}
+		defer f.Close()
+	}
+}
+
 func loadRepoListFile(dotfilePath string) []string {
+	ensureDotFileExists(dotfilePath)
+
 	f, err := os.Open(dotfilePath)
 	if err != nil {
 		panic(err)
