@@ -2,9 +2,11 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
 	"os"
-	"strings"
+	"os/user"
+	"path/filepath"
 )
 
 func recursiveScanFolder(folder string) []string {
@@ -12,26 +14,34 @@ func recursiveScanFolder(folder string) []string {
 }
 
 func scanGitFolders(folders []string, rootFolder string) []string {
-	folder := strings.TrimSuffix(rootFolder, "/")
+	folder := filepath.Clean(rootFolder)
 	f, err := os.Open(folder)
-	defer f.Close()
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	files, err := f.ReadDir(-1)
+	defer f.Close()
 
-	for _, file := range files {
-		if file.IsDir() {
-			if file.Name() == "node_modules" || file.Name() == "vendor" {
+	entries, err := f.ReadDir(-1)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for _, entry := range entries {
+		if entry.IsDir() {
+			name := entry.Name()
+
+			if name == "node_modules" || name == "vendor" {
 				continue
 			}
 
-			path := folder + "/" + file.Name()
-			if file.Name() == ".git" {
-				path = strings.TrimSuffix(path, "/.git")
-				folders = append(folders, path)
+			path := filepath.Join(folder, name)
+			if name == ".git" {
+				repoPath := filepath.Dir(path) // parent of .git
+				fmt.Println(repoPath)
+				folders = append(folders, repoPath)
 				continue
 			}
 
@@ -40,7 +50,23 @@ func scanGitFolders(folders []string, rootFolder string) []string {
 	}
 
 	return folders
+}
 
+func getDotFilePath() string {
+	usr, err := user.Current()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return filepath.Join(usr.HomeDir, ".gitlocalstats")
+}
+
+func scan(folder string) {
+	print("scan")
+}
+
+func stats(email string) {
+	print("stats")
 }
 
 func main() {
@@ -54,4 +80,6 @@ func main() {
 	if folder != "" {
 		scan(folder)
 	}
+
+	stats(email)
 }
