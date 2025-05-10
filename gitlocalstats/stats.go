@@ -1,6 +1,7 @@
 package main
 
 import (
+	"sort"
 	"time"
 
 	"gopkg.in/src-d/go-git.v4"
@@ -12,6 +13,8 @@ const daysInLastSixMonths = 183
 // An "infinite" number to represent any date that is too far in the past
 // Here, older is than 6 months is considered as too far in the past
 const outOfRange = 99999
+
+type column []int
 
 func stats(email string) {
 	commits := processRepositories(email)
@@ -97,6 +100,49 @@ func countDaysSinceDate(date time.Time) int {
 	return days
 }
 
+// prints the commits stats
 func printCommitStats(commits map[int]int) {
+	keys := sortMapIntoSlice(commits)
+	cols := buildCols(keys, commits)
+	printCells(cols)
+}
+
+// Returns a slice of indexes of a map, ordered
+func sortMapIntoSlice(m map[int]int) []int {
+	var keys []int
+
+	for key := range m {
+		keys = append(keys, key)
+	}
+
+	sort.Ints(keys)
+
+	return keys
+}
+
+// Generates a map with rows and columns ready to be printed to screen
+func buildCols(keys []int, commits map[int]int) map[int]column {
+	cols := make(map[int]column)
+	col := column{}
+
+	for _, key := range keys {
+		week := int(key / 7)
+		dayInWeek := key % 7
+		if dayInWeek == 0 {
+			col = column{}
+		}
+
+		col = append(col, commits[key])
+
+		if dayInWeek == 6 {
+			cols[week] = col
+		}
+
+	}
+
+	return cols
+}
+
+func printCells(cols map[int]column) {
 
 }
