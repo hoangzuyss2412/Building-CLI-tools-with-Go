@@ -40,6 +40,31 @@ func processRepositories(email string) map[int]int {
 	return commits
 }
 
+// Calculate the amount of days missing to fill the last row of the stats graph
+func calcOffset() int {
+	var offset int
+	switch weekDay := time.Now().Weekday(); weekDay {
+	case time.Monday:
+		offset = 6
+	case time.Tuesday:
+		offset = 5
+	case time.Wednesday:
+		offset = 4
+	case time.Thursday:
+		offset = 3
+	case time.Friday:
+		offset = 2
+	case time.Saturday:
+		offset = 1
+	case time.Sunday:
+		offset = 0
+	default:
+		return outOfRange
+	}
+
+	return offset
+}
+
 // populate the commits map based on the given repo and user email
 func fillCommits(email string, repoPath string, commits map[int]int) map[int]int {
 	repo, err := git.PlainOpen(repoPath)
@@ -63,7 +88,7 @@ func fillCommits(email string, repoPath string, commits map[int]int) map[int]int
 			return nil
 		}
 
-		daysAgo := countDaysSinceDate(c.Author.When)
+		daysAgo := countDaysSinceDate(c.Author.When) + calcOffset()
 
 		// if day is not too old
 		if daysAgo != outOfRange {
